@@ -3,7 +3,6 @@ html {
 }
 body {
   margin: 0;
-  background-image: linear-gradient(315deg, #ebbe9b 0%, #e7a977 74%);
 }
 
 canvas {
@@ -12,5 +11,5 @@ canvas {
   left: 0;
   height: 100vh;
   width: 100vw;
-  background-color: #fff;
+  background-image: linear-gradient(315deg, #ebbe9b 0%, #e7a977 74%);
 }
