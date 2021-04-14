@@ -4,10 +4,10 @@ const width = canvas.width;
 const height = canvas.height;
 
 const directions = {
-  37: 'left',
-  38: 'up',
-  39: 'right',
-  40: 'down',
+  left: 37,
+  up: 38,
+  right: 39,
+  down: 40,
 };
 
 class Bullet {
@@ -49,6 +49,7 @@ class Tank {
     // degree of tank rotation in radians
     this.deg = deg;
     this.color = color;
+    this.keysInfo = {};
   }
 
   draw() {
@@ -81,29 +82,33 @@ class Tank {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.closePath();
   }
+
+  move() {
+    const speedCoeff = 7;
+    if (this.keysInfo[directions.left]) {    
+      tank.deg += Math.PI / (speedCoeff * 4);
+    }
+    if (this.keysInfo[directions.right]) {
+      tank.deg -= Math.PI / (speedCoeff * 4);
+    }
+    if (this.keysInfo[directions.up]) {
+      tank.y += Math.sin(tank.deg) * speedCoeff;
+      tank.x -= Math.cos(tank.deg) * speedCoeff;
+    }
+    if (this.keysInfo[directions.down]) {
+      tank.x += Math.cos(tank.deg) * speedCoeff;
+      tank.y -= Math.sin(tank.deg) * speedCoeff;
+    }
+  }
 }
 
 window.onkeydown = (e) => {
-  const direction = directions[e.keyCode];
-
-  if (direction === undefined) {
-    return;
-  }
-  if (direction === 'left') {
-    tank.deg += Math.PI / 12;
-  }
-  if (direction === 'right') {
-    tank.deg -= Math.PI / 12;
-  }
-  if (direction === 'up') {
-    tank.y += Math.sin(tank.deg) * 15;
-    tank.x -= Math.cos(tank.deg) * 15;
-  }
-  if (direction === 'down') {
-    tank.x += Math.cos(tank.deg) * 15;
-    tank.y -= Math.sin(tank.deg) * 15;
-  }
+  tank.keysInfo[e.keyCode] = true;
 };
+
+window.onkeyup = (e) => {
+  delete tank.keysInfo[e.keyCode];
+}
 
 const bullet = new Bullet({ x: 500, y: 500, r: 50, xSpeed: 2, ySpeed: 3 });
 
@@ -119,5 +124,11 @@ setInterval(() => {
   ctx.clearRect(0, 0, width, height);
   bullet.draw();
   tank.draw();
+  
   bullet.move();
-}, 1);
+  tank.move();
+}, 1000/60);
+
+setInterval(() => {
+  console.log(tank.keysInfo);
+}, 500);
