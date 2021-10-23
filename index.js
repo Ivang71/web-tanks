@@ -100,7 +100,7 @@ class Tank {
   draw() {
     ctx.beginPath()
     ctx.translate(this.x, this.y)
-    ctx.rotate(-this.deg - Math.PI / 2)
+    ctx.rotate(-this.deg + Math.PI / 2)
 
     const normalX = this.x
     const normalY = this.y
@@ -154,12 +154,12 @@ class Tank {
       tank.deg -= rotationSpeed
     }
     if (this.keysPressed[directions.up]) {
-      tank.y += ySpeed
-      tank.x -= xSpeed
+      tank.y -= ySpeed
+      tank.x += xSpeed
     }
     if (this.keysPressed[directions.down]) {
-      tank.x += xSpeed
-      tank.y -= ySpeed
+      tank.x -= xSpeed
+      tank.y += ySpeed
     }
   }
 
@@ -171,13 +171,22 @@ class Tank {
     console.log(this)
 
     const bullet = new Bullet({
-      x: this.x + (this.size/2) / Math.sin(-this.deg - Math.PI),
+      x: this.x + (this.size / 2) / Math.sin(-this.deg - Math.PI),
       y: this.y + this.size - r,
       r,
       ySpeed: Math.sin(-this.deg - Math.PI) * 10,
       xSpeed: Math.cos(-this.deg - Math.PI) * 10,
     })
     bullets.push(bullet)
+  }
+
+  normalizeDegrees() {
+    if (this.deg > Math.PI * 2) {
+      this.deg = this.deg % Math.PI * 2
+    }
+    if (this.deg < 0) {
+      this.deg += Math.PI * 2
+    }
   }
 }
 
@@ -210,6 +219,7 @@ const gameLoop = (timestamp) => {
   }
   tank.draw()
   tank.move()
+  tank.normalizeDegrees()
 
   requestAnimationFrame(gameLoop)
 }
