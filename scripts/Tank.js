@@ -14,7 +14,7 @@ export class Tank {
     this.x = x
     this.y = y
     this.size = size
-    // degree of tank rotation in radians; positive rotation is clockwise
+    // degrees of the tank rotation in radians; positive rotation is clockwise
     this.deg = deg
     this.color = color
     this.keysPressed = {}
@@ -38,7 +38,7 @@ export class Tank {
     ctx.fillRect(xTopLeft, yTopLeft, this.size, this.size)
     ctx.fillRect(
       xTopLeft + this.size / 3,
-      yTopLeft - this.size / 2 + 1, //add 1 to draw barrel correctly
+      yTopLeft - this.size / 2, //add 1 to draw barrel correctly
       this.size / 3,
       this.size / 2,
     )
@@ -57,7 +57,7 @@ export class Tank {
     const xSpeed = Math.sin(this.deg) * speedCoefficient
     const rotationSpeed = Math.PI / 90
 
-    /*if (this.x + this.size / 2 > width) {
+    /*if (this.x + this.size / 2 > width) { todo collision detection
       this.x -= xSpeed * 2
     }
     if (this.x - this.size / 2 < 0) {
