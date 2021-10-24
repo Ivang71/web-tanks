@@ -1,7 +1,16 @@
+const pi = Math.PI
+const cos = Math.cos
+const sin = Math.sin
+
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
-const width = canvas.width
-const height = canvas.height
+let width = window.innerWidth
+let height = window.innerHeight
+
+/*const grassTexture = new Image()
+grassTexture.src = 'images/grass.jpg'
+ctx.fillStyle = ctx.createPattern(grassTexture, 'repeat')
+ctx.fillRect(0, 0, height, width)*/
 
 const directions = {
   left: 'ArrowLeft',
@@ -12,7 +21,7 @@ const directions = {
 }
 
 function modifyRgbColor(colors) {
-  //accepts array of rgb colors
+  //accepts array of rgb colors as numbers
   const epsilon = 5
   return colors.map((color) => {
     do {
@@ -26,21 +35,10 @@ const rgbToHex = (colors) =>
   '#' +
   colors
     .map((x) => {
-      const hex = x.toString(16)
+      const hex = Number(x).toString(16)
       return hex.length === 1 ? '0' + hex : hex
     })
     .join('')
-
-function hexToRgb(hex) {
-  let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  return result
-    ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16),
-    }
-    : null
-}
 
 class Bullet {
   constructor({
@@ -57,7 +55,7 @@ class Bullet {
     this.r = r
     this.xSpeed = xSpeed
     this.ySpeed = ySpeed
-    this.lifetime = lifetime
+    // this.lifetime = lifetime
     this.color = color
   }
 
@@ -66,15 +64,15 @@ class Bullet {
     const normalFillStyle = ctx.fillStyle
     ctx.fillStyle = rgbToHex(this.color)
     ctx.beginPath()
-    ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI)
+    ctx.arc(this.x, this.y, this.r, 0, 2 * pi)
     ctx.fill()
     ctx.closePath()
     ctx.fillStyle = normalFillStyle
   }
 
   move() {
-    /*this.x += this.xSpeed todo uncomment
-    this.y += this.ySpeed*/
+    this.x += this.xSpeed
+    this.y += this.ySpeed
 
     if (this.x + this.r > width || this.x - this.r < 0) {
       this.xSpeed = -this.xSpeed
@@ -91,7 +89,7 @@ class Tank {
     this.x = x
     this.y = y
     this.size = size
-    // degree of tank rotation in radians
+    // degree of tank rotation in radians; clockwise though
     this.deg = deg
     this.color = color
     this.keysPressed = {}
@@ -100,7 +98,7 @@ class Tank {
   draw() {
     ctx.beginPath()
     ctx.translate(this.x, this.y)
-    ctx.rotate(-this.deg + Math.PI / 2)
+    ctx.rotate(this.deg)
 
     const normalX = this.x
     const normalY = this.y
@@ -130,11 +128,11 @@ class Tank {
 
   move() {
     const speedCoefficient = 3
-    const ySpeed = Math.sin(tank.deg) * speedCoefficient
-    const xSpeed = Math.cos(tank.deg) * speedCoefficient
-    const rotationSpeed = Math.PI / 90
+    const ySpeed = cos(tank.deg) * speedCoefficient
+    const xSpeed = sin(tank.deg) * speedCoefficient
+    const rotationSpeed = pi / 90
 
-    if (this.x + this.size / 2 > width) {
+    /*if (this.x + this.size / 2 > width) {
       this.x -= xSpeed * 2
     }
     if (this.x - this.size / 2 < 0) {
@@ -145,17 +143,17 @@ class Tank {
     }
     if (this.y + this.size / 2 > height) {
       this.y -= ySpeed * 2
-    }
+    }*/
 
     if (this.keysPressed[directions.left]) {
-      tank.deg += rotationSpeed
-    }
-    if (this.keysPressed[directions.right]) {
       tank.deg -= rotationSpeed
     }
+    if (this.keysPressed[directions.right]) {
+      tank.deg += rotationSpeed
+    }
     if (this.keysPressed[directions.up]) {
-      tank.y -= ySpeed
       tank.x += xSpeed
+      tank.y -= ySpeed
     }
     if (this.keysPressed[directions.down]) {
       tank.x -= xSpeed
@@ -165,27 +163,22 @@ class Tank {
 
   fire() {
     const r = this.size / 6
-
-    const position = {}
-
-    console.log(this)
-
     const bullet = new Bullet({
-      x: this.x + (this.size / 2) / Math.sin(-this.deg - Math.PI),
-      y: this.y + this.size - r,
+      x: this.x + (this.size - r) * sin(this.deg),
+      y: this.y - (this.size - r) * cos(this.deg),
       r,
-      ySpeed: Math.sin(-this.deg - Math.PI) * 10,
-      xSpeed: Math.cos(-this.deg - Math.PI) * 10,
+      ySpeed: -cos(this.deg) * 10,
+      xSpeed: sin(this.deg) * 10,
     })
     bullets.push(bullet)
   }
 
   normalizeDegrees() {
-    if (this.deg > Math.PI * 2) {
-      this.deg = this.deg % Math.PI * 2
+    if (this.deg > pi * 2) {
+      this.deg = this.deg % pi * 2
     }
     if (this.deg < 0) {
-      this.deg += Math.PI * 2
+      this.deg += pi * 2
     }
   }
 }
@@ -205,12 +198,14 @@ const tank = new Tank({
   x: width / 2,
   y: height / 2,
   size: 70,
-  color: '#5275e6',
+  color: '#000000',
 })
 
 const bullets = []
 
-const gameLoop = (timestamp) => {
+const gameLoop = () => {
+  width = canvas.width = window.innerWidth
+  height = canvas.height = window.innerHeight
   ctx.clearRect(0, 0, width, height)
 
   for (const bullet of bullets) {
