@@ -1,6 +1,6 @@
 import { Bullet } from './Bullet.js'
 
-const directions = {
+const keys = {
   left: 'ArrowLeft',
   up: 'ArrowUp',
   right: 'ArrowRight',
@@ -18,6 +18,7 @@ export class Tank {
     this.deg = deg
     this.color = color
     this.keysPressed = {}
+    this.isCooldown = false
   }
 
   draw(ctx) {
@@ -70,23 +71,31 @@ export class Tank {
       this.y -= ySpeed * 2
     }*/
 
-    if (this.keysPressed[directions.left]) {
+    if (this.keysPressed[keys.left]) {
       this.deg -= rotationSpeed
     }
-    if (this.keysPressed[directions.right]) {
+    if (this.keysPressed[keys.right]) {
       this.deg += rotationSpeed
     }
-    if (this.keysPressed[directions.up]) {
+    if (this.keysPressed[keys.up]) {
       this.x += xSpeed
       this.y -= ySpeed
     }
-    if (this.keysPressed[directions.down]) {
+    if (this.keysPressed[keys.down]) {
       this.x -= xSpeed
       this.y += ySpeed
     }
   }
 
-  fireABullet() {
+  fire(bullets) {
+    if (!this.isCooldown && this.keysPressed[keys.space]) {
+      bullets.push(this.launchABullet())
+      this.isCooldown = true
+      setTimeout(() => this.isCooldown = false, 200)
+    }
+  }
+
+  launchABullet() {
     const r = this.size / 6
     return new Bullet({
       x: this.x + (this.size - r) * Math.sin(this.deg),

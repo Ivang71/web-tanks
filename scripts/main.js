@@ -16,9 +16,6 @@ const bullets = []
 
 window.onkeydown = (e) => {
   tank.keysPressed[e.code] = true
-  if (e.code === 'Space') {
-    bullets.push(tank.fireABullet())
-  }
 }
 
 window.onkeyup = (e) => {
@@ -37,6 +34,7 @@ const gameLoop = () => {
   tank.draw(ctx)
   tank.move()
   tank.normalizeDegrees()
+  tank.fire(bullets)
 
   requestAnimationFrame(gameLoop)
 }
