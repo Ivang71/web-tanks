@@ -1,4 +1,4 @@
-import { Bullet } from './Bullet.js'
+import { Bullet } from './Bullet'
 
 const keys = {
   left: 'ArrowLeft',
@@ -9,19 +9,25 @@ const keys = {
 }
 
 export class Tank {
-  constructor({x, y, size, color = '#000', deg = 0}) {
+  x: number
+  y: number
+  size: number
+  color: string
+  /** Tank rotation in radians, positive rotation is clockwise */
+  deg: number
+  keysPressed: {[k: string]: boolean} = {}
+  isCooldown = false
+
+  constructor(x: number, y: number, size: number, color = '#000', deg = 0) {
     // x, y - coordinates of center
     this.x = x
     this.y = y
     this.size = size
-    // degrees of the tank rotation in radians; positive rotation is clockwise
     this.deg = deg
     this.color = color
-    this.keysPressed = {}
-    this.isCooldown = false
   }
 
-  draw(ctx) {
+  draw(ctx: CanvasRenderingContext2D) {
     ctx.beginPath()
     ctx.translate(this.x, this.y)
     ctx.rotate(this.deg)
@@ -87,7 +93,7 @@ export class Tank {
     }
   }
 
-  fire(bullets) {
+  fire(bullets: Bullet[]) {
     if (!this.isCooldown && this.keysPressed[keys.space]) {
       bullets.push(this.launchABullet())
       this.isCooldown = true
@@ -97,13 +103,14 @@ export class Tank {
 
   launchABullet() {
     const r = this.size / 6
-    return new Bullet({
-      x: this.x + (this.size - r) * Math.sin(this.deg),
-      y: this.y - (this.size - r) * Math.cos(this.deg),
+    return new Bullet(
+      this.x + (this.size - r) * Math.sin(this.deg),
+      this.y - (this.size - r) * Math.cos(this.deg),
       r,
-      ySpeed: -Math.cos(this.deg) * 10,
-      xSpeed: Math.sin(this.deg) * 10,
-    })
+      Math.sin(this.deg) * 10,
+      -Math.cos(this.deg) * 10,
+      ['f', '0', '10'],
+    )
   }
 
   normalizeDegrees() {

@@ -1,12 +1,19 @@
 export class Bullet {
-  constructor({
-    x,
-    y,
-    r,
-    xSpeed,
-    ySpeed,
-    color = [0, 0, 0],
-  }) {
+  x: number
+  y: number
+  r: number
+  xSpeed: number
+  ySpeed: number
+  color: string[]
+
+  constructor(
+    x: number,
+    y: number,
+    r: number,
+    xSpeed: number,
+    ySpeed: number,
+    color: string[],
+  ) {
     this.x = x
     this.y = y
     this.r = r
@@ -15,9 +22,9 @@ export class Bullet {
     this.color = color
   }
 
-  draw(ctx) {
+  draw(ctx: CanvasRenderingContext2D) {
     const normalFillStyle = ctx.fillStyle
-    ctx.fillStyle = this.color
+    ctx.fillStyle = `rgb(${this.color[0]}, ${this.color[1]}, ${this.color[2]},)`
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI)
     ctx.fill()
@@ -25,7 +32,7 @@ export class Bullet {
     ctx.fillStyle = normalFillStyle
   }
 
-  move({ width, height }) {
+  move(width: number, height: number) {
     this.x += this.xSpeed
     this.y += this.ySpeed
 

@@ -1,18 +1,20 @@
-import { Tank } from './Tank.js'
+import { Bullet } from './Bullet'
+import { Tank } from './Tank'
 
-const canvas = document.getElementById('canvas')
-const ctx = canvas.getContext('2d')
+const canvas = document.getElementById('canvas') as HTMLCanvasElement
+
+const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 let width = window.innerWidth
 let height = window.innerHeight
 
-const tank = new Tank({
-  x: width / 2,
-  y: height / 2,
-  size: 70,
-  color: '#000000',
-})
+const tank = new Tank(
+  width / 2,
+  height / 2,
+  70,
+  '#000000',
+)
 
-const bullets = []
+const bullets: Bullet[] = []
 
 window.onkeydown = (e) => {
   tank.keysPressed[e.code] = true
@@ -29,7 +31,7 @@ const gameLoop = () => {
 
   for (const bullet of bullets) {
     bullet.draw(ctx)
-    bullet.move({ width, height })
+    bullet.move(width, height)
   }
   tank.draw(ctx)
   tank.move()
