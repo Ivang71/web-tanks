@@ -1,5 +1,5 @@
-# Tanks game on vanilla js
+# Tanks web game
 
-View [demo](https://itsoktocode.github.io/tanks)
+View [demo](https://ivang71.github.io/web-tanks)
 
-The game was made in plain javascript to learn new things and have fun.
+The game is made in plain typescript to learn new things and have fun.
