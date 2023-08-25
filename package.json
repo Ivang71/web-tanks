@@ -1,0 +1,11 @@
+{
+  "name": "web-tanks",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Ivang",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "typescript": "^5.2.2"
+  }
+}
