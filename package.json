@@ -11,7 +11,9 @@
     "build": "parcel build ./src/index.html --public-url ./",
     "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup --verbose"
   },
-  "dependencies": {},
+  "dependencies": {
+    "gl-matrix": "^3.4.3"
+  },
   "devDependencies": {
     "parcel": "^2.9.3",
     "push-dir": "^0.4.1",

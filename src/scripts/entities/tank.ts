@@ -1,4 +1,4 @@
-import { Bullet } from './Bullet'
+import { Bullet } from './bullet'
 
 const keys = {
   left: 'ArrowLeft',
@@ -96,7 +96,7 @@ export class Tank {
   fire(bullets: Bullet[]) {
     if (!this.isCooldown && this.keysPressed[keys.space]) {
       bullets.push(this.launchABullet())
-      this.isCooldown = true
+      // this.isCooldown = true
       setTimeout(() => this.isCooldown = false, 200)
     }
   }

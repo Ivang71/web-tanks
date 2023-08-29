@@ -1,5 +1,5 @@
-import { Bullet } from './Bullet'
-import { Tank } from './Tank'
+import { Bullet } from './entities/bullet'
+import { Tank } from './entities/tank'
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement
 
