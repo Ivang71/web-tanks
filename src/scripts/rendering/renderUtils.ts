@@ -5,7 +5,7 @@ let squareRotation = 0.0
 let deltaTime = 0
 
 
-const main = () => {
+export const main = () => {
   const canvas = document.querySelector("#canvas") as HTMLCanvasElement
   const gl = canvas.getContext("webgl2") as WebGL2RenderingContext
 
@@ -15,9 +15,6 @@ const main = () => {
     )
     return
   }
-
-  gl.clearColor(0.0, 0.0, 0.0, 1.0)
-  gl.clear(gl.COLOR_BUFFER_BIT)
 
   // Vertex shader program
 
@@ -76,21 +73,21 @@ const main = () => {
 
   let then = 0
 
-  const render = (now: number) => {
-    now *= 0.001
-    deltaTime = now - then
-    then = now
+  // const render = (now: number) => {
+  //   now *= 0.001
+  //   deltaTime = now - then
+  //   then = now
 
-    drawScene(gl, programInfo, buffers, squareRotation)
-    squareRotation += deltaTime
+  //   drawScene(gl, programInfo, buffers, squareRotation)
+  //   // squareRotation += deltaTime
 
-    requestAnimationFrame(render)
-  }
-  requestAnimationFrame(render)
+  //   requestAnimationFrame(render)
+  // }
+  // requestAnimationFrame(render)
 }
 
 // Initialize a shader program, so WebGL knows how to draw our data
-const initShaderProgram = (gl: WebGL2RenderingContext, vsSource: string, fsSource: string) => {
+export const initShaderProgram = (gl: WebGL2RenderingContext, vsSource: string, fsSource: string) => {
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource)
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource)
 
@@ -112,7 +109,6 @@ const initShaderProgram = (gl: WebGL2RenderingContext, vsSource: string, fsSourc
         shaderProgram
       )}`
     )
-    return null
   }
 
   return shaderProgram
@@ -142,4 +138,22 @@ const loadShader = (
   return shader
 }
 
-main()
+export function resizeCanvasToDisplaySize(canvas: HTMLCanvasElement) {
+  // Lookup the size the browser is displaying the canvas in CSS pixels.
+  const displayWidth  = canvas.clientWidth;
+  const displayHeight = canvas.clientHeight;
+ 
+  // Check if the canvas is not the same size.
+  const needResize = canvas.width  !== displayWidth ||
+                     canvas.height !== displayHeight;
+ 
+  if (needResize) {
+    // Make the canvas the same size
+    canvas.width  = displayWidth;
+    canvas.height = displayHeight;
+  }
+ 
+  return needResize;
+}
+
+// main()

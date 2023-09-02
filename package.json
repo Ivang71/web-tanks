@@ -15,6 +15,9 @@
     "gl-matrix": "^3.4.3"
   },
   "devDependencies": {
+    "@parcel/transformer-glsl": "2.9.3",
+    "@parcel/transformer-inline-string": "2.9.3",
+    "lil-gui": "^0.18.2",
     "parcel": "^2.9.3",
     "push-dir": "^0.4.1",
     "shx": "^0.3.4",

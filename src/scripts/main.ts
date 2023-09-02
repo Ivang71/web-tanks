@@ -1,43 +1,41 @@
-import { Bullet } from './entities/bullet'
-import { Tank } from './entities/tank'
+import { entityManager } from './entities/managers/entityManager'
+import { renderManager } from './rendering/renderManager'
+import GUI from 'lil-gui'
 
-const canvas = document.getElementById('canvas') as HTMLCanvasElement
+export const gui = new GUI({
+    width: 400
+})
 
-const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-let width = window.innerWidth
-let height = window.innerHeight
+entityManager.createTank([400, 400])
 
-const tank = new Tank(
-  width / 2,
-  height / 2,
-  70,
-  '#000000',
-)
-
-const bullets: Bullet[] = []
-
-window.onkeydown = (e) => {
-  tank.keysPressed[e.code] = true
-}
-
-window.onkeyup = (e) => {
-  delete tank.keysPressed[e.code]
-}
+setTimeout(() => {
+    renderManager.render()
+}, 100)
 
 const gameLoop = () => {
-  width = canvas.width = window.innerWidth
-  height = canvas.height = window.innerHeight
-  ctx.clearRect(0, 0, width, height)
+    // get input data from user
+    // ai
+    // game loginc and physics
+    // rendering
+    // audio
 
-  for (const bullet of bullets) {
-    bullet.draw(ctx)
-    bullet.move(width, height)
-  }
-  tank.draw(ctx)
-  tank.move()
-  tank.normalizeDegrees()
-  tank.fire(bullets)
+    entityManager.tick()
+    renderManager.render()
 
-  requestAnimationFrame(gameLoop)
+
+    // width = canvas.width = window.innerWidth
+    // height = canvas.height = window.innerHeight
+    // ctx.clearRect(0, 0, width, height)
+
+    // for (const bullet of bullets) {
+    //   bullet.draw(ctx)
+    //   bullet.move(width, height)
+    // }
+    // tank.draw(ctx)
+    // tank.move()
+    // tank.normalizeDegrees()
+    // tank.fire(bullets)
+
+    requestAnimationFrame(gameLoop)
 }
 gameLoop()

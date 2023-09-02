@@ -1,0 +1,1 @@
+export type FixedArray4<T> = [T, T, T, T]
