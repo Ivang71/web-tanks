@@ -43,17 +43,30 @@ export class Tank extends BaseEntity {
     }
 
     updateVertices() {
-        const x1 = 0 - this.size[0] / 2
-        const x2 = 0 + this.size[0] / 2
-        const y1 = 0 - this.size[1] / 2
-        const y2 = 0 + this.size[1] / 2
+        const hullBack = 0 - this.size[0] / 2,
+            hullFront = 0 + this.size[0] / 2,
+            hullLeft = 0 - this.size[1] / 2,
+            hullRight = 0 + this.size[1] / 2,
+            muzzleEnd = hullFront + this.size[0] * 0.6,
+            muzzleLeft = hullLeft + this.size[1] / 3,
+            muzzleRight = hullRight - this.size[1] / 3
+
         this.vertices = new Float32Array([
-            x1, y1,
-            x2, y1,
-            x1, y2,
-            x1, y2,
-            x2, y1,
-            x2, y2,
+            // hull
+            hullBack, hullLeft,
+            hullFront, hullLeft,
+            hullBack, hullRight,
+            hullBack, hullRight,
+            hullFront, hullLeft,
+            hullFront, hullRight,
+
+            // muzzle
+            hullFront, muzzleLeft,
+            muzzleEnd, muzzleLeft,
+            hullFront, muzzleRight,
+            hullFront, muzzleRight,
+            muzzleEnd, muzzleLeft,
+            muzzleEnd, muzzleRight
         ])
     }
 }
