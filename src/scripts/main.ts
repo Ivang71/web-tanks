@@ -6,18 +6,24 @@ export const gui = new GUI({
     width: 400
 })
 
-entityManager.createTank([400, 400])
+entityManager.createTank([400, 400], true)
 
 setTimeout(() => {
     renderManager.render()
 }, 100)
 
-const gameLoop = () => {
+let then = Date.now() - 16, deltaTime = 0
+
+const gameLoop = (now: number) => {
     // get input data from user
     // ai
     // game loginc and physics
     // rendering
     // audio
+    
+    deltaTime = now - then
+    then = now
+    
 
     entityManager.tick()
     renderManager.render()
@@ -38,4 +44,5 @@ const gameLoop = () => {
 
     requestAnimationFrame(gameLoop)
 }
-gameLoop()
+
+requestAnimationFrame(gameLoop)

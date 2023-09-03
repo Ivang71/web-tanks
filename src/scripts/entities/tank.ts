@@ -11,6 +11,7 @@ export class Tank extends BaseEntity {
         /** Rrotatin in radians, posiitve is counter-clockwise */
         public rotation = 0,
         public speed = 0,
+        public maxSpeed = 3,
         public health = 100,
         public isAlive = true,
         public cooldown = false,
@@ -35,7 +36,23 @@ export class Tank extends BaseEntity {
         // animation, vfx
         // audio
         // ai behavior
+
+        this.position[0] += Math.cos(this.rotation) * this.speed
+        this.position[1] += Math.sin(this.rotation) * this.speed
+
+        if (Math.abs(this.speed) > 0) this.speed = this.speed * 0.93
+
+
         renderManager.enqueue(this)
+    }
+
+    rotate(radians: number) {
+        this.rotation += radians // TODO test with inertia
+    }
+
+    accelerate(speed: number) { 
+        if (this.speed + Math.abs(speed) > this.maxSpeed) return       
+        this.speed += speed // TODO inertia
     }
 
     render() {
@@ -43,10 +60,10 @@ export class Tank extends BaseEntity {
     }
 
     updateVertices() {
-        const hullBack = 0 - this.size[0] / 2,
-            hullFront = 0 + this.size[0] / 2,
-            hullLeft = 0 - this.size[1] / 2,
-            hullRight = 0 + this.size[1] / 2,
+        const hullBack = -this.size[0] / 2,
+            hullFront = this.size[0] / 2,
+            hullLeft = -this.size[1] / 2,
+            hullRight = this.size[1] / 2,
             muzzleEnd = hullFront + this.size[0] * 0.6,
             muzzleLeft = hullLeft + this.size[1] / 3,
             muzzleRight = hullRight - this.size[1] / 3
