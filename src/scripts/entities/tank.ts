@@ -11,6 +11,7 @@ export class Tank extends BaseEntity {
         /** Rrotatin in radians, posiitve is counter-clockwise */
         public rotation = 0,
         public speed = 0,
+        public rotationSpeed = 0,
         public maxSpeed = 3,
         public health = 100,
         public isAlive = true,
@@ -42,12 +43,18 @@ export class Tank extends BaseEntity {
 
         if (Math.abs(this.speed) > 0) this.speed = this.speed * 0.93
 
+        this.rotation += this.rotationSpeed
+        if (Math.abs(this.rotationSpeed) > 0.001) {
+            this.rotationSpeed *= 0.83
+        } else {
+            this.rotationSpeed = 0
+        }
 
         renderManager.enqueue(this)
     }
 
     rotate(radians: number) {
-        this.rotation += radians // TODO test with inertia
+        this.rotationSpeed += radians
     }
 
     accelerate(speed: number) { 

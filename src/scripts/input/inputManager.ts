@@ -23,8 +23,8 @@ class InputMananager {
     updateUserTank(tank: Tank) {
         if (this.keys['KeyW']) tank.accelerate(0.3)
         if (this.keys['KeyS']) tank.accelerate(-0.3)
-        if (this.keys['KeyA']) tank.rotate(-0.03)
-        if (this.keys['KeyD']) tank.rotate(0.03)
+        if (this.keys['KeyA']) tank.rotate(-0.007)
+        if (this.keys['KeyD']) tank.rotate(0.007)
 
     }
 }
