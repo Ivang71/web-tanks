@@ -3,5 +3,10 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
     base: '/web-tanks',
-    plugins: [glsl()]
+    plugins: [glsl()],
+    server: {
+        watch: {
+            usePolling: true
+        }
+    }
 })
