@@ -52,7 +52,7 @@ export class Tank extends BaseEntity {
 
     accelerate(speed: number) { 
         if (this.speed + Math.abs(speed) > this.maxSpeed) return       
-        this.speed += speed // TODO inertia
+        this.speed = Math.sign(speed) * this.maxSpeed
     }
 
     render() {
