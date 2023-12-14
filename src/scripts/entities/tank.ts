@@ -64,9 +64,9 @@ export class Tank extends BaseEntity {
             hullFront = this.size[0] / 2,
             hullLeft = -this.size[1] / 2,
             hullRight = this.size[1] / 2,
-            muzzleEnd = hullFront + this.size[0] * 0.6,
-            muzzleLeft = hullLeft + this.size[1] / 3,
-            muzzleRight = hullRight - this.size[1] / 3
+            gunEnd = hullFront + this.size[0] * 0.6,
+            gunLeft = hullLeft + this.size[1] / 3,
+            gunRight = hullRight - this.size[1] / 3
 
         this.vertices = new Float32Array([
             // hull
@@ -77,13 +77,13 @@ export class Tank extends BaseEntity {
             hullFront, hullLeft,
             hullFront, hullRight,
 
-            // muzzle
-            hullFront, muzzleLeft,
-            muzzleEnd, muzzleLeft,
-            hullFront, muzzleRight,
-            hullFront, muzzleRight,
-            muzzleEnd, muzzleLeft,
-            muzzleEnd, muzzleRight
+            // gun
+            hullFront, gunLeft,
+            gunEnd, gunLeft,
+            hullFront, gunRight,
+            hullFront, gunRight,
+            gunEnd, gunLeft,
+            gunEnd, gunRight
         ])
     }
 }

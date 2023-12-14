@@ -8,9 +8,9 @@ export const gui = new GUI({
 
 entityManager.createTank([400, 400], true)
 
-setTimeout(() => {
-    renderManager.render()
-}, 100)
+// setTimeout(() => {
+//     renderManager.render()
+// }, 100)
 
 let then = Date.now() - 16, deltaTime = 0
 
