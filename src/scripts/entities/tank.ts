@@ -1,6 +1,6 @@
 import { mat3, vec2 } from 'gl-matrix'
 import { BaseEntity } from './baseEntity'
-import { renderManager } from '../rendering/renderManager'
+import { canvas, renderManager } from '../rendering/renderManager'
 import { FixedArray4 } from '../types/genericTypes'
 import { gui } from '../main'
 import { entityManager } from './managers/entityManager'
@@ -53,6 +53,21 @@ export class Tank extends BaseEntity {
             this.rotationSpeed = 0
         }
 
+        const p = this.position
+        if (canvas) {
+            if (p[0] > canvas.width) {
+                p[0] = 0
+            } else if (p[0] < 0) {
+                p[0] = canvas.width
+            }
+        
+            if (p[1] > canvas.height) {
+                p[1] = 0
+            } else if (p[1] < 0) {
+                p[1] = canvas.height
+            }
+        }
+
         renderManager.enqueue(this)
     }
 
@@ -69,7 +84,7 @@ export class Tank extends BaseEntity {
         if (this.isCooldown) return
         this.isCooldown = true
         setTimeout(() => this.isCooldown = false, this.cooldown)
-        const gunLength = 90, speed = 0.4
+        const gunLength = 90, speed = 0.1
 
         const velocity: vec2 = [speed * Math.cos(this.rotation), speed * Math.sin(this.rotation)]
         const position: vec2 = [

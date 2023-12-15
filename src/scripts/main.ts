@@ -6,7 +6,7 @@ export const gui = new GUI({
     width: 400
 })
 
-entityManager.createTank([400, 400], true)
+setTimeout(() => entityManager.createTank([400, 400], true), 300)
 
 let then = Date.now() - 16, deltaTime = 0
 let DEBUG = false, fpsSum = 0, timesFpsSummed = 0, recalculateFps = true

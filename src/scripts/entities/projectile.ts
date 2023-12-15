@@ -1,7 +1,7 @@
 import { vec2 } from 'gl-matrix'
 import { BaseEntity } from './baseEntity'
 import { FixedArray4 } from '../types/genericTypes'
-import { renderManager } from '../rendering/renderManager'
+import { canvas, renderManager } from '../rendering/renderManager'
 import { Renderable } from '../types/entityTypes'
 
 export class Projectile extends BaseEntity implements Renderable {
@@ -27,7 +27,22 @@ export class Projectile extends BaseEntity implements Renderable {
         this.position[0] += deltaX
         this.position[1] += deltaY
 
-        // Add additional logic like collision detection or behavior changes here
+        const p = this.position
+
+        if (canvas) {
+            if (p[0] > canvas.width) {
+                p[0] = 0
+            } else if (p[0] < 0) {
+                p[0] = canvas.width
+            }
+        
+            if (p[1] > canvas.height) {
+                p[1] = 0
+            } else if (p[1] < 0) {
+                p[1] = canvas.height
+            }
+        }
+
         renderManager.enqueue(this)
     }
 
@@ -37,20 +52,20 @@ export class Projectile extends BaseEntity implements Renderable {
 }
 
 function generateCircleVertices(radius: number, segments: number): Float32Array {
-    const vertices: number[] = [];
+    const vertices: number[] = []
 
-    for (let i = 0; i <= segments; i++) {
-        const theta = (i / segments) * Math.PI;
-        for (let j = 0; j <= segments; j++) {
-            const phi = (j / segments) * 2 * Math.PI;
+   Array.from({ length: segments}).forEach((_, i) => {
+        const theta = (i / segments) * Math.PI
+        Array.from({ length: segments}).forEach((_, j) => {
+            const phi = (j / segments) * 2 * Math.PI
 
-            const x = radius * Math.sin(theta) * Math.cos(phi);
-            const y = radius * Math.sin(theta) * Math.sin(phi);
-            const z = radius * Math.cos(theta);
+            const x = radius * Math.sin(theta) * Math.cos(phi)
+            const y = radius * Math.sin(theta) * Math.sin(phi)
+            const z = radius * Math.cos(theta)
 
-            vertices.push(x, y, z);
-        }
-    }
+            vertices.push(x, y, z)
+        })
+    })
 
-    return new Float32Array(vertices);
+    return new Float32Array(vertices)
 }

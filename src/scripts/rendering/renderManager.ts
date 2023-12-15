@@ -4,6 +4,8 @@ import { initShaderProgram, resizeCanvasToDisplaySize } from './renderUtils'
 import vsSource from './shaders/shader.vert'
 import fsSource from './shaders/shader.frag'
 
+export let canvas: HTMLCanvasElement | null  = null
+
 class RenderManager {
     private gl: WebGL2RenderingContext
     private program: WebGLProgram
@@ -15,7 +17,7 @@ class RenderManager {
     private matrixLoc: WebGLUniformLocation
 
     constructor() {
-        const canvas = document.querySelector("#canvas") as HTMLCanvasElement
+        canvas = document.querySelector("#canvas") as HTMLCanvasElement
         const gl = canvas.getContext("webgl2") as WebGL2RenderingContext
         this.gl = gl
         this.program = initShaderProgram(gl, vsSource, fsSource)
@@ -30,7 +32,7 @@ class RenderManager {
     }
 
     render() {
-        if (this.renderQueue.length < 1) return
+        // if (this.renderQueue.length < 1) return
 
         const gl = this.gl, canvas = gl.canvas as HTMLCanvasElement
         resizeCanvasToDisplaySize(canvas)
