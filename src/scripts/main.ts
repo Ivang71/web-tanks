@@ -8,10 +8,6 @@ export const gui = new GUI({
 
 entityManager.createTank([400, 400], true)
 
-// setTimeout(() => {
-//     renderManager.render()
-// }, 100)
-
 let then = Date.now() - 16, deltaTime = 0
 
 const gameLoop = (now: number) => {
@@ -25,7 +21,7 @@ const gameLoop = (now: number) => {
     then = now
     
 
-    entityManager.tick()
+    entityManager.tick(deltaTime)
     renderManager.render()
 
 

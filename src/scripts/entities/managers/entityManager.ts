@@ -1,18 +1,17 @@
 import { vec2 } from 'gl-matrix'
-import { IEntityManager } from '../../types/entityTypes'
-import { Bullet } from '../bullet'
+import { Projectile } from '../projectile'
 import { Tank } from '../tank'
 import { inputMananager } from '../../input/inputManager'
 
-class EntityManager implements IEntityManager {
-    private entities: (Tank | Bullet)[] = []
+class EntityManager {
+    private entities: (Tank | Projectile)[] = []
     private userTank: Tank | null = null
 
-    tick() {
+    tick(deltaTime: number) {
         this.userTank && inputMananager.updateUserTank(this.userTank)
         
         for (const entity of this.entities) {
-            entity.update()
+            entity.update(deltaTime)
         }
     }
 
@@ -22,8 +21,10 @@ class EntityManager implements IEntityManager {
         if (isUserTank) this.userTank = tank
     }
 
-    createBullet(...args: any) {
-        this.entities.push(new Bullet(args))
+    fireTank(tank: Tank) {
+        const projectile = tank.fire()
+        if (!projectile) return
+        this.entities.push(projectile)
     }
 }
 

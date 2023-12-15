@@ -3,6 +3,8 @@ import { BaseEntity } from './baseEntity'
 import { renderManager } from '../rendering/renderManager'
 import { FixedArray4 } from '../types/genericTypes'
 import { gui } from '../main'
+import { entityManager } from './managers/entityManager'
+import { Projectile } from './projectile'
 
 export class Tank extends BaseEntity {
     constructor(
@@ -15,7 +17,8 @@ export class Tank extends BaseEntity {
         public maxSpeed = 3,
         public health = 100,
         public isAlive = true,
-        public cooldown = false,
+        public isCooldown = false,
+        public cooldown = 1000, // in ms
         public transform = mat3.create(),
         public vertices = new Float32Array(),
         /** Color in rgba */
@@ -30,7 +33,7 @@ export class Tank extends BaseEntity {
         gui.add({ sizeY: 10 }, 'sizeY', -30, 30).onChange((n: number) => this.size[1] = n)
     }
 
-    update() {
+    update(deltaTime: number) {
         // handle input
         // physics
         // health
@@ -60,6 +63,21 @@ export class Tank extends BaseEntity {
     accelerate(speed: number) { 
         if (this.speed + Math.abs(speed) > this.maxSpeed) return       
         this.speed = Math.sign(speed) * this.maxSpeed
+    }
+
+    fire() {
+        if (this.isCooldown) return
+        this.isCooldown = true
+        setTimeout(() => this.isCooldown = false, this.cooldown)
+        const gunLength = 90, speed = 0.4
+
+        const velocity: vec2 = [speed * Math.cos(this.rotation), speed * Math.sin(this.rotation)]
+        const position: vec2 = [
+            this.position[0] + gunLength * Math.cos(this.rotation),
+            this.position[1] + gunLength * Math.sin(this.rotation),
+        ]
+
+        return new Projectile(position, velocity)
     }
 
     render() {

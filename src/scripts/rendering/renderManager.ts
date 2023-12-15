@@ -1,5 +1,5 @@
 import { mat3 } from 'gl-matrix'
-import { Entity } from '../types/entityTypes'
+import { Renderable } from '../types/entityTypes'
 import { initShaderProgram, resizeCanvasToDisplaySize } from './renderUtils'
 import vsSource from './shaders/shader.vert'
 import fsSource from './shaders/shader.frag'
@@ -7,7 +7,7 @@ import fsSource from './shaders/shader.frag'
 class RenderManager {
     private gl: WebGL2RenderingContext
     private program: WebGLProgram
-    private renderQueue: Entity[] = []
+    private renderQueue: Renderable[] = []
     private positionAttribLoc: number
     private positionBuffer: WebGLBuffer
     private vao: WebGLVertexArrayObject
@@ -39,23 +39,19 @@ class RenderManager {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
         gl.useProgram(this.program)
         gl.bindVertexArray(this.vao)
-        gl.vertexAttribPointer(this.positionAttribLoc, 2, gl.FLOAT, false, 0, 0)
-
         const baseMatrix = mat3.create()
         mat3.projection(baseMatrix, canvas.clientWidth, canvas.clientHeight)
 
-        let totalSize = 0
         for (const entity of this.renderQueue) {
-            totalSize += entity.vertices.length * Float32Array.BYTES_PER_ELEMENT
-        }
+            const buffer = gl.createBuffer()
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+            gl.bufferData(gl.ARRAY_BUFFER, entity.vertices, gl.DYNAMIC_DRAW)
 
-        const buffer = gl.createBuffer()
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-        gl.bufferData(gl.ARRAY_BUFFER, totalSize * Float32Array.BYTES_PER_ELEMENT, gl.DYNAMIC_DRAW)
-        let offset = 0
+            // Set up the attribute pointer inside the loop
+            gl.vertexAttribPointer(this.positionAttribLoc, 2, gl.FLOAT, false, 0, 0)
+            gl.enableVertexAttribArray(this.positionAttribLoc)
 
-        for (const entity of this.renderQueue) {
-            gl.bufferSubData(gl.ARRAY_BUFFER, offset, new Float32Array(entity.vertices))
+            gl.bufferSubData(gl.ARRAY_BUFFER, 0, entity.vertices)
             gl.uniform4f(this.colorLoc, ...entity.color)
 
             const matrix = mat3.clone(baseMatrix)
@@ -64,40 +60,19 @@ class RenderManager {
             mat3.scale(matrix, matrix, entity.size)
 
             gl.uniformMatrix3fv(this.matrixLoc, false, matrix)
-            gl.drawArrays(gl.TRIANGLES, offset, entity.vertices.length)
-            offset += entity.vertices.length * Float32Array.BYTES_PER_ELEMENT
-        }
 
-        // const squareVertices = new Float32Array([
-        //     -0.5, -0.5,   // Bottom-left corner
-        //      0.5, -0.5,   // Bottom-right corner
-        //      0.5,  0.5,   // Top-right corner
-        //     -0.5,  0.5,   // Top-left corner
-        //   ]);
-      
-        //   gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-        //   gl.bufferData(gl.ARRAY_BUFFER, squareVertices, gl.STATIC_DRAW);
-      
-        //   gl.enableVertexAttribArray(this.positionAttribLoc);
-        //   gl.vertexAttribPointer(this.positionAttribLoc, 2, gl.FLOAT, false, 0, 0);
-      
-        //   // Set a simple matrix (identity matrix in this case)
-        //   const matrix = mat3.create();
-      
-        //   // You can add additional transformations if needed
-      
-        //   gl.uniformMatrix3fv(this.matrixLoc, false, matrix);
-      
-        //   // Set a color (e.g., white)
-        //   gl.uniform4f(this.colorLoc, 1.0, 1.0, 1.0, 1.0);
-      
-        //   // Draw the square
-        //   gl.drawArrays(gl.TRIANGLE_FAN, 0, 4)
+            // Draw the arrays for each entity
+            gl.drawArrays(gl.TRIANGLES, 0, entity.vertices.length / 2)
+
+            // Clean up the buffer after drawing
+            gl.deleteBuffer(buffer)
+        }
+        
 
         this.renderQueue = []
     }
 
-    enqueue(entity: Entity) {
+    enqueue(entity: Renderable) {
         this.renderQueue.push(entity)
     }
 }

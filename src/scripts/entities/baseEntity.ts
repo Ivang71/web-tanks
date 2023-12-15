@@ -1,5 +1,4 @@
 import { vec2 } from 'gl-matrix'
-import { Position } from '../types/entityTypes'
 
 export abstract class BaseEntity {
     id = Math.random()
@@ -8,6 +7,6 @@ export abstract class BaseEntity {
         public position: vec2
     ) {}
 
-    abstract update(): void
+    abstract update(deltaTime: number): void
     abstract render(): void
 }
