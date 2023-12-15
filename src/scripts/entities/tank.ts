@@ -21,8 +21,8 @@ export class Tank extends BaseEntity {
         public cooldown = 1000, // in ms
         public transform = mat3.create(),
         public vertices = new Float32Array(),
-        /** Color in rgba */
-        public color: FixedArray4<number> = [0.3, 0.5, 0.5, 1],
+        public zIndex = 10000,
+        public color: FixedArray4<number> = [0.3, 0.5, 0.5, 1], // color in rgba
     ) {
         super(position)
         this.updateVertices()

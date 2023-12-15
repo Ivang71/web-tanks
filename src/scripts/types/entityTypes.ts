@@ -10,4 +10,5 @@ export interface Renderable {
     vertices: Float32Array
     rotation: number
     size: vec2
+    zIndex: number
 }

@@ -12,7 +12,7 @@ export class Projectile extends BaseEntity implements Renderable {
         public vertices = new Float32Array(),        
         public size: vec2 = [5.5, 5.5],
         public rotation = 0,
-
+        public zIndex = 1000,
     ) {
         super(position)
         const radius = this.size[0] / 2

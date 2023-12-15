@@ -42,7 +42,9 @@ class RenderManager {
         const baseMatrix = mat3.create()
         mat3.projection(baseMatrix, canvas.clientWidth, canvas.clientHeight)
 
-        for (const entity of this.renderQueue) {
+        const sortedRenderQueue = this.renderQueue.sort((a, b) => a.zIndex - b.zIndex)
+
+        for (const entity of sortedRenderQueue) {
             const buffer = gl.createBuffer()
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
             gl.bufferData(gl.ARRAY_BUFFER, entity.vertices, gl.DYNAMIC_DRAW)
