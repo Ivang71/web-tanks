@@ -9,6 +9,8 @@ export const gui = new GUI({
 entityManager.createTank([400, 400], true)
 
 let then = Date.now() - 16, deltaTime = 0
+let DEBUG = false, fpsSum = 0, timesFpsSummed = 0, recalculateFps = true
+const fpsDiv = document.getElementById('fps') as HTMLDivElement
 
 const gameLoop = (now: number) => {
     // get input data from user
@@ -19,6 +21,20 @@ const gameLoop = (now: number) => {
     
     deltaTime = now - then
     then = now
+
+    if (DEBUG) { // fps calculations
+        const fps = 1 / (deltaTime / 1000)
+        fpsSum += fps
+        timesFpsSummed++
+        if (recalculateFps) {
+            const averageFps = fpsSum / timesFpsSummed
+            fpsSum = 0, timesFpsSummed = 0
+            
+            fpsDiv.innerText = String(Math.trunc(averageFps))
+            recalculateFps = false
+            setTimeout(() => recalculateFps = true, 150)
+        }
+    }
     
 
     entityManager.tick(deltaTime)

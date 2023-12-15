@@ -8,6 +8,7 @@
     <style>
         html {
             color-scheme: dark light;
+            font-family: Arial, Helvetica, sans-serif;
         }
         html, body, canvas {
             width:  100%;
@@ -15,11 +16,19 @@
             margin: 0;
             overflow: hidden;
         }
+        body {
+            position: relative;
+        }
+        #fps {
+            position: absolute;
+            inset: 7px;
+        }
     </style>
 	<script>onload = () => {setTimeout(() => {document.getElementById("body").style.display = ""}, 20)}</script>
 </head>
 
 <body id="body" style="display:none">
+    <div id="fps"></div>
 	<canvas id="canvas"></canvas>
 	<script type="module" src="/src/scripts/main.ts"></script>
 </body>
